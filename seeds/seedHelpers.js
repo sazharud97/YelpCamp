@@ -28,7 +28,6 @@ module.exports.places = [
     'Canyon',
     'Pond',
     'Group Camp',
-    'Horse Camp',
     'Ghost Town',
     'Camp',
     'Dispersed Camp',
