@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 
 const cities = require('./cities');
-const seedHelpers = require('./seedHelpers');
+const {places, descriptors} = require('./seedHelpers');
 const Campground = require('../models/campground');
 
 // USE 127.0.0.1 INSTEAD OF LOCALHOST
@@ -21,6 +21,8 @@ db.once("open", ()=> {
     console.log("DB Connected");
 });
 
+const sample = array => array[Math.floor(Math.random() * array.length)];
+
 // clearing out db and re-filling it
 const seedDB = async() => {
     // clearing db
@@ -28,10 +30,8 @@ const seedDB = async() => {
     // generating 50 new campgrounds
     for(let i = 0; i < 50; i++) {
         const random1000 = Math.floor(Math.random()*1000);
-        const randomDesc = Math.floor(Math.random()*20);
-        const randomPlace = Math.floor(Math.random()*20);
         const camp = new Campground({
-            title: `${seedHelpers.descriptors[randomDesc]} ${seedHelpers.places[randomPlace]}`,
+            title: `${sample(descriptors)} ${sample(places)}`,
             location: `${cities[random1000].city}, ${cities[random1000].state}`
         })
         await camp.save();
