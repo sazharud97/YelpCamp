@@ -21,7 +21,9 @@ db.once("open", ()=> {
     console.log("DB Connected");
 });
 
-const sample = array => array[Math.floor(Math.random() * array.length)];
+// picks a random value from the array passed to it as a param
+// e.g sample(places) picks a raondom value from places array
+const sample = (array) => array[Math.floor(Math.random() * array.length)];
 
 // clearing out db and re-filling it
 const seedDB = async() => {
@@ -38,4 +40,5 @@ const seedDB = async() => {
     }
 }
 // calling/executing seedDB, important step lmao
-seedDB();
+// close db connection after seeding
+seedDB().then(()=>{mongoose.connection.close()});
