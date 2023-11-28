@@ -1,10 +1,7 @@
-const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 
 const Campground = require('./models/campground');
-
-const app = express();
-const path = require('path');
 
 // USE 127.0.0.1 INSTEAD OF LOCALHOST
 mongoose.connect('mongodb://127.0.0.1:27017/yelpCampDb', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -21,3 +18,10 @@ db.on("error", console.error.bind(console, "connection error"));
 db.once("open", ()=> {
     console.log("DB Connected");
 });
+
+// clearing out db and re-filling it
+const seedDB = async() => {
+    await Campground.deleteMany({});
+    const c = new Campground({title: 'purple field'});
+    await c.save();
+}
