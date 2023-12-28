@@ -36,6 +36,11 @@ app.get('/campgrounds', async(req, res) => {
     res.render('campgrounds/index', {campgrounds})
 })
 
+// VIEW SPECIFIC CAMPGROUND DETAILS
+app.get('/campgrounds/:id', async(req, res) => {
+    res.render('campgrounds/show')
+})
+
 // NEW CAMPGROUND
 app.get('/makecampground', async (req, res)=> {
     const camp = new Campground({title: 'My Backyard', description: 'Issa my backyard sah'});
