@@ -38,15 +38,10 @@ app.get('/campgrounds', async(req, res) => {
 
 // VIEW SPECIFIC CAMPGROUND DETAILS
 app.get('/campgrounds/:id', async(req, res) => {
-    res.render('campgrounds/show')
+    const campground = await (Campground.findById(req.params.id));
+    res.render('campgrounds/show', {campground});
 })
 
-// NEW CAMPGROUND
-app.get('/makecampground', async (req, res)=> {
-    const camp = new Campground({title: 'My Backyard', description: 'Issa my backyard sah'});
-    await camp.save();
-    res.send(camp)
-})
 
 app.listen(3000, ()=> {
     console.log('LISTENING ON PORT 3000 SAH!!!')
