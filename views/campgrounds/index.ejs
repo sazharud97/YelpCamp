@@ -8,6 +8,8 @@
 <body>
     <h1>All Campgrounds</h1>
     <ul>
+        <!-- for  loop iterating thru every campground in db -->
+        <!-- 'campgrounds' was passed to file in app.js  -->
         <% for (let campground of campgrounds){ %>
             <li> <%= campground.title %> </li>
         <% } %>
