@@ -25,6 +25,9 @@ db.once("open", ()=> {
 app.set('view engine','ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// allows express to parse request bodies into values
+app.use(express.urlencoded({extended:true}))
+
 // HOME PAGE
 app.get('/', (req, res) => {
     res.render('home')
@@ -36,8 +39,18 @@ app.get('/campgrounds', async(req, res) => {
     res.render('campgrounds/index', {campgrounds})
 })
 
+// NEW CAMPGROUND PAGE
+// needs to be ABOVE show page else logic will look for campground with ID "new"
 app.get('/campgrounds/new', (req,res)=> {
     res.render('campgrounds/new');
+})
+
+// POST for new campground created above
+app.post('/campgrounds' ,async(req, res)=> {
+    const campground = new Campground(req.body.campground);
+    await campground.save();
+
+    res.redirect(`/campgrounds/${campground._id}`);
 })
 
 // VIEW SPECIFIC CAMPGROUND DETAILS
