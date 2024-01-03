@@ -7,7 +7,8 @@
 </head>
 <body>
     <h1>Edit <%= campground.title %></h1>
-    <form action="/campgrounds" method="PUT">
+    <!-- calling the PUT request defined in app.js via method override -->
+    <form action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST">
         <div>
             <label for="title">Title</label>
             <input type="text" id="title" name="campground[title]" value="<%= campground.title %>">
@@ -16,7 +17,7 @@
             <label for="location">Location</label>
             <input type="text" id="location" name="campground[location]" value="<%= campground.location %>">
         </div>
-        <button>Add Campground</button>
+        <button>Update Campground</button>
     </form>
     <footer>
         <div>
