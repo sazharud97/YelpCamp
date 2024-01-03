@@ -1,10 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
-const Campground = require('./models/campground');
-
 const app = express();
 const path = require('path');
+const methodOverride = require('method-override');
+
+const Campground = require('./models/campground');
 
 // USE 127.0.0.1 INSTEAD OF LOCALHOST
 mongoose.connect('mongodb://127.0.0.1:27017/yelpCampDb', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -27,6 +27,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 // allows express to parse request bodies into values
 app.use(express.urlencoded({extended:true}))
+// use method override
+app.use(methodOverride('_method'));
 
 // HOME PAGE
 app.get('/', (req, res) => {
@@ -67,4 +69,8 @@ app.get('/campgrounds/:id/edit', async(req, res) => {
 
 app.listen(3000, ()=> {
     console.log('LISTENING ON PORT 3000 SAH!!!')
+})
+
+app.put('/campgrounds/:id', async(req, res) => {
+    res.send("IT WORKED BAYBEEEEEEEEEEEEEEEEE")
 })
