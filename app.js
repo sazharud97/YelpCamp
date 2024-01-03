@@ -5,6 +5,7 @@ const path = require('path');
 const methodOverride = require('method-override');
 
 const Campground = require('./models/campground');
+const campground = require('./models/campground');
 
 // USE 127.0.0.1 INSTEAD OF LOCALHOST
 mongoose.connect('mongodb://127.0.0.1:27017/yelpCampDb', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -71,9 +72,17 @@ app.listen(3000, ()=> {
     console.log('LISTENING ON PORT 3000 SAH!!!')
 })
 
+// EDIT logic, what happends when you press "Update Campground" button
 app.put('/campgrounds/:id', async(req, res) => {
     // destruct request to pull id
     const {id} = req.params;
     const campground = await Campground.findByIdAndUpdate(id, {...req.body.campground});
     res.redirect(`/campgrounds/${campground._id}`)
+})
+
+// DELETE campground
+app.delete('/campgrounds/:id', async(req, res)=> {
+    const {id} = req.params;
+    await Campground.findByIdAndDelete(id);
+    res.redirect('/campgrounds');
 })
