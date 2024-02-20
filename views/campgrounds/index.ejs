@@ -4,13 +4,27 @@
     <div>
         <a href="/campgrounds/new"><strong>Create New Campground</strong></a>
     </div>
-    <ul>
-        <!-- for  loop iterating thru every campground in db -->
-        <!-- 'campgrounds' was passed to file in app.js  -->
+    <!-- for  loop iterating thru every campground in db -->
+    <!-- 'campgrounds' was passed to file in app.js  -->
+    <div class="row">
         <% for (let campground of campgrounds){ %>
-            <li> <a href="/campgrounds/<%= campground._id %>">
-                    <%= campground.title %>
-                </a>
-            </li>
+            <div class="card my-2 mx-1" style="width: 21rem;">
+                <div class="">
+                    <img class="card-img-top img-fluid" src="<%= campground.image  %>" alt="Card image cap"
+                        width="100%">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%= campground.title %>
+                        </h5>
+                        <p class="card-text">
+                            <%= campground.description %>
+                                the
+                                card's content.
+                        </p>
+                        <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">Book
+                            This!</a>
+                    </div>
+                </div>
+            </div>
             <% } %>
-    </ul>
+    </div>
