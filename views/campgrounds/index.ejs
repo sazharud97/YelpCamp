@@ -8,6 +8,7 @@
         <!-- for  loop iterating thru every campground in db -->
         <!-- 'campgrounds' was passed to file in app.js  -->
         <% for (let campground of campgrounds){ %>
+            <!-- card system to have multiple listings in a row -->
             <div class="card my-2 mx-1" style="width: 21rem;">
                 <div class="">
                     <!-- making img a link to listing -->
@@ -21,8 +22,6 @@
                         </h5>
                         <p class="card-text">
                             <%= campground.description %>
-                                the
-                                card's content.
                         </p>
                         <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">Book
                             This!</a>
