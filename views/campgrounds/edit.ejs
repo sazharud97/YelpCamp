@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit <%= campground.name %></title>
-</head>
-<body>
-    <h1>Edit <%= campground.title %></h1>
+<% layout('layouts/Boilerplate') %>
+
+    <h1>Edit <%= campground.title %>
+    </h1>
     <!-- calling the PUT request defined in app.js via method override -->
     <form action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST">
         <div>
@@ -22,9 +17,8 @@
     <footer>
         <div>
             <a href="/campgrounds/<%= campground._id %>"><strong>Back to campground</strong></a>
-        <br>
-        <a href="/campgrounds"><strong>All Campgrounds</strong></a>
+            <br>
+            <a href="/campgrounds"><strong>All Campgrounds</strong></a>
         </div>
     </footer>
-</body>
-</html>
+    </body>
