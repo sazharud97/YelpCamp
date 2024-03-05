@@ -1,5 +1,30 @@
 <% layout('layouts/Boilerplate') %>
 
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <img class="card-img-top" src="<%= campground.image %>" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <strong>
+                            <%= campground.title %>
+                        </strong>
+                    </h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                        card's content.</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Cras justo odio</li>
+                    <li class="list-group-item">Dapibus ac facilisis in</li>
+                    <li class="list-group-item">Vestibulum at eros</li>
+                </ul>
+                <div class="card-body">
+                    <a href="#" class="card-link">Card link</a>
+                    <a href="#" class="card-link">Another link</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <h1>
         <strong>
             <%= campground.title %>
@@ -17,12 +42,22 @@
     </span>
 
     <footer>
-        <p>
-        <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
-            <button>Delet this broder</button>
-        </form>
-        </p>
         <a href="/campgrounds/<%=campground._id%>/edit">Edit this campground</a>
         <br>
         <a href="/campgrounds">All Campgrounds</a>
+        <p class="my-3">
+        <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
+            <button class="btn btn-danger" onclick="confirmDelete()">Delete <%= campground.title %>?</button>
+        </form>
+        </p>
     </footer>
+
+    <script>
+        function confirmDelete() {
+            confirm("Are you sure you want to delete <%= campground.title %>?");
+
+            if (confirmDelete == false) {
+                return;
+            }
+        }
+    </script>
