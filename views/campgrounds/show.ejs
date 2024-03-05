@@ -10,54 +10,29 @@
                             <%= campground.title %>
                         </strong>
                     </h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                        card's content.</p>
+                    <p class="card-text">
+                        <%= campground.description %>
+                    </p>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Cras justo odio</li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
+                    <li class="list-group-item">
+                        <%= campground.location %>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>$<%= campground.price %></strong>/night
+                    </li>
                 </ul>
                 <div class="card-body">
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
+                    <a class="card-link btn btn-info" href="/campgrounds/<%=campground._id%>/edit">
+                        Edit this campground
+                    </a>
+                    <form class="d-inline" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-danger"
+                            onclick="return confirm('Are you sure you want to delete <%=campground.title %>?');">
+                            Delete <%= campground.title %>?
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    <h1>
-        <strong>
-            <%= campground.title %>
-        </strong>
-    </h1>
-    <h2>
-        <%= campground.location %>
-    </h2>
-    <img width="100%" src="<%= campground.image %>" alt="">
-    <p>
-        <%= campground.description %>
-    </p>
-    <span>
-        <%= campground.price %>/Night
-    </span>
-
-    <footer>
-        <a href="/campgrounds/<%=campground._id%>/edit">Edit this campground</a>
-        <br>
-        <a href="/campgrounds">All Campgrounds</a>
-        <p class="my-3">
-        <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
-            <button class="btn btn-danger" onclick="confirmDelete()">Delete <%= campground.title %>?</button>
-        </form>
-        </p>
-    </footer>
-
-    <script>
-        function confirmDelete() {
-            confirm("Are you sure you want to delete <%= campground.title %>?");
-
-            if (confirmDelete == false) {
-                return;
-            }
-        }
-    </script>
