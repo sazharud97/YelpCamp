@@ -1,27 +1,35 @@
 <% layout('layouts/Boilerplate') %>
 
+    <!-- BOOTSTRAP CARD -->
     <div class="row">
         <div class="col-6 offset-3">
             <div class="card">
+                <!-- IMAGE -->
                 <img class="card-img-top" src="<%= campground.image %>" alt="Card image cap">
                 <div class="card-body">
+                    <!-- TITLE -->
                     <h5 class="card-title">
                         <strong>
                             <%= campground.title %>
                         </strong>
                     </h5>
+                    <!-- DESCRIPTION -->
                     <p class="card-text">
                         <%= campground.description %>
                     </p>
                 </div>
+                <!-- GROUPING ALL OF THE SUB ROWS -->
                 <ul class="list-group list-group-flush">
+                    <!-- LOCATION -->
                     <li class="list-group-item">
                         <%= campground.location %>
                     </li>
+                    <!-- PRICE -->
                     <li class="list-group-item">
                         <strong>$<%= campground.price %></strong>/night
                     </li>
                 </ul>
+                <!-- SEPERATE DIV TO HOLD BUTTONS -->
                 <div class="card-body">
                     <a class="card-link btn btn-info" href="/campgrounds/<%=campground._id%>/edit">
                         Edit this campground
@@ -32,6 +40,10 @@
                             Delete <%= campground.title %>?
                         </button>
                     </form>
+                </div>
+                <!-- FOOTER -->
+                <div class="card-footer text-center text-muted">
+                    <a href="/campgrounds">All Campgrounds</a>
                 </div>
             </div>
         </div>
