@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
+const Joi = require('joi');
 const path = require('path');
 const ejsMate = require('ejs-mate');
 const CatchAsync = require('./utils/CatchAsync');
@@ -54,7 +55,15 @@ app.get('/campgrounds/new', (req, res) => {
 
 // POST for new campground created above
 app.post('/campgrounds', CatchAsync(async (req, res, next) => {
-    if (!req.body.campground) throw new ExpressError('Invalid Campground data', 400);
+    // more error handling than just form controls in case form bypassed
+    // if (!req.body.campground) throw new ExpressError('Invalid Campground data', 400);
+
+    const campgroundShema = Joi.object({
+        campground: Joi.object({
+            title: Joi.string().required(),
+            price: Joi.number().required().min(0)
+        }).required()
+    })
     const campground = new Campground(req.body.campground);
     await campground.save();
 
@@ -99,6 +108,8 @@ app.all('*', (req, res, next) => {
 // BASIC ERROR HANDLER
 app.use((err, req, res, next) => {
     const { statusCode = 500, message = 'something went wrong' } = err;
-    res.status(statusCode).send(message);
-    res.send("OOPSIE something went wrong o_o")
+    if (!err.message) {
+        err.message = "Oopsie! Error :("
+    }
+    res.status(statusCode).render('error', { err });
 })
