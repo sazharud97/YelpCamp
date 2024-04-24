@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const app = express();
 const path = require('path');
 const ejsMate = require('ejs-mate');
+const CatchAsync = require('./utils/CatchAsync');
+const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 
 const Campground = require('./models/campground');
@@ -39,10 +41,10 @@ app.get('/', (req, res) => {
 })
 
 // GET CAMPGROUNDS
-app.get('/campgrounds', async (req, res) => {
+app.get('/campgrounds', CatchAsync(async (req, res) => {
     const campgrounds = await (Campground.find({}));
     res.render('campgrounds/index', { campgrounds })
-})
+}))
 
 // NEW CAMPGROUND PAGE
 // needs to be ABOVE show page else logic will look for campground with ID "new"
@@ -51,50 +53,52 @@ app.get('/campgrounds/new', (req, res) => {
 })
 
 // POST for new campground created above
-app.post('/campgrounds', async (req, res, next) => {
-    try {
-        const campground = new Campground(req.body.campground);
-        await campground.save();
+app.post('/campgrounds', CatchAsync(async (req, res, next) => {
+    if (!req.body.campground) throw new ExpressError('Invalid Campground data', 400);
+    const campground = new Campground(req.body.campground);
+    await campground.save();
 
-        res.redirect(`/campgrounds/${campground._id}`);
-    } catch (error) {
-        next(error);
-    }
-
-})
+    res.redirect(`/campgrounds/${campground._id}`);
+}))
 
 // VIEW SPECIFIC CAMPGROUND DETAILS
-app.get('/campgrounds/:id', async (req, res) => {
+app.get('/campgrounds/:id', CatchAsync(async (req, res) => {
     const campground = await (Campground.findById(req.params.id));
     res.render('campgrounds/show', { campground });
-})
+}))
 
 // EDIT CAMPGROUND DETAILS
-app.get('/campgrounds/:id/edit', async (req, res) => {
+app.get('/campgrounds/:id/edit', CatchAsync(async (req, res) => {
     const campground = await (Campground.findById(req.params.id));
     res.render('campgrounds/edit', { campground });
-})
+}))
 
 app.listen(3000, () => {
     console.log('LISTENING ON PORT 3000 SAH!!!')
 })
 
 // EDIT logic, what happends when you press "Update Campground" button
-app.put('/campgrounds/:id', async (req, res) => {
+app.put('/campgrounds/:id', CatchAsync(async (req, res) => {
     // destruct request to pull id
     const { id } = req.params;
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
     res.redirect(`/campgrounds/${campground._id}`)
-})
+}))
 
 // DELETE campground
-app.delete('/campgrounds/:id', async (req, res) => {
+app.delete('/campgrounds/:id', CatchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     res.redirect('/campgrounds');
+}))
+
+app.all('*', (req, res, next) => {
+    next(new ExpressError('Page not found', 404));
 })
 
 // BASIC ERROR HANDLER
 app.use((err, req, res, next) => {
+    const { statusCode = 500, message = 'something went wrong' } = err;
+    res.status(statusCode).send(message);
     res.send("OOPSIE something went wrong o_o")
 })
