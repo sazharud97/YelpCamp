@@ -1,11 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-const Joi = require('joi');
 const path = require('path');
 const ejsMate = require('ejs-mate');
 const CatchAsync = require('./utils/CatchAsync');
 const ExpressError = require('./utils/ExpressError');
+const { campgroundSchema } = require('./schemas.js')
 const methodOverride = require('method-override');
 
 const Campground = require('./models/campground');
@@ -36,6 +36,19 @@ app.use(express.urlencoded({ extended: true }))
 // use method override
 app.use(methodOverride('_method'));
 
+const validateCampground = (req, res, next) => {
+    const { error } = campgroundSchema.validate(req.body);
+    if (error) {
+        // map iterates through each item in array and applies condition to them
+        // join separates them by commaw
+        const msg = error.details.map(i => i.message).join(', ')
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+
+}
+
 // HOME PAGE
 app.get('/', (req, res) => {
     res.render('home')
@@ -56,14 +69,10 @@ app.get('/campgrounds/new', (req, res) => {
 // POST for new campground created above
 app.post('/campgrounds', CatchAsync(async (req, res, next) => {
     // more error handling than just form controls in case form bypassed
-    // if (!req.body.campground) throw new ExpressError('Invalid Campground data', 400);
+    // Joi validating data before we even save or make mongoose calls
 
-    const campgroundShema = Joi.object({
-        campground: Joi.object({
-            title: Joi.string().required(),
-            price: Joi.number().required().min(0)
-        }).required()
-    })
+
+    console.log(result);
     const campground = new Campground(req.body.campground);
     await campground.save();
 
