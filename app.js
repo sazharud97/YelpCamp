@@ -5,7 +5,7 @@ const path = require('path');
 const ejsMate = require('ejs-mate');
 const CatchAsync = require('./utils/CatchAsync');
 const ExpressError = require('./utils/ExpressError');
-const { campgroundSchema } = require('./schemas.js')
+const { campgroundSchema, reviewSchema } = require('./schemas.js')
 const methodOverride = require('method-override');
 
 const Campground = require('./models/campground');
@@ -46,7 +46,18 @@ const validateCampground = (req, res, next) => {
     } else {
         next();
     }
+}
 
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
+    if (error) {
+        // map iterates through each item in array and applies condition to them
+        // join separates them by commaw
+        const msg = error.details.map(i => i.message).join(', ')
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
 }
 
 // HOME PAGE
@@ -67,11 +78,9 @@ app.get('/campgrounds/new', (req, res) => {
 })
 
 // POST for new campground created above
-app.post('/campgrounds', CatchAsync(async (req, res, next) => {
+app.post('/campgrounds', validateCampground, CatchAsync(async (req, res, next) => {
     // more error handling than just form controls in case form bypassed
     // Joi validating data before we even save or make mongoose calls
-
-
     console.log(result);
     const campground = new Campground(req.body.campground);
     await campground.save();
@@ -111,7 +120,7 @@ app.delete('/campgrounds/:id', CatchAsync(async (req, res) => {
 }))
 
 //! ----- REVIEW ROUTING -----
-app.post('/campgrounds/:id/reviews', CatchAsync(async (req, res) => {
+app.post('/campgrounds/:id/reviews', validateReview, CatchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id);
     const review = new Review(req.body.Review);
     campground.reviews.push(review);
