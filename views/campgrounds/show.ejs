@@ -28,7 +28,7 @@
                         <strong>$<%= campground.price %></strong>/night
                     </li>
                 </ul>
-                <!-- SEPERATE DIV TO HOLD BUTTONS -->
+                <!-- SEPARATE DIV TO HOLD BUTTONS -->
                 <div class="card-body">
                     <a class="card-link btn btn-info" href="/campgrounds/<%=campground._id%>/edit">
                         Edit this campground
@@ -46,10 +46,10 @@
                 </div>
             </div>
             <h2>Stayed here? Leave a review!</h2>
-            <form action="" class="mb-4">
+            <form action="/campgrounds/<%= campground._id %>/reviews" method="POST" class="mb-4">
                 <div class="mb-3">
                     <label for="rating" class="form-label">Review Score</label>
-                    <input type="range" class="form-range" min="1" max="5" id="">
+                    <input type="range" class="form-range" min="1" max="5" id="" name="review[rating]">
                 </div>
                 <div class="mb-3">
                     <label for="body" class="form-label">Review</label>

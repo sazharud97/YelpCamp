@@ -9,7 +9,7 @@ const { campgroundSchema } = require('./schemas.js')
 const methodOverride = require('method-override');
 
 const Campground = require('./models/campground');
-const campground = require('./models/campground');
+const Review = require('./models/review');
 
 // USE 127.0.0.1 INSTEAD OF LOCALHOST
 mongoose.connect('mongodb://127.0.0.1:27017/yelpCampDb', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -110,6 +110,17 @@ app.delete('/campgrounds/:id', CatchAsync(async (req, res) => {
     res.redirect('/campgrounds');
 }))
 
+//! ----- REVIEW ROUTING -----
+app.post('/campgrounds/:id/reviews', CatchAsync(async (req, res) => {
+    const campground = await Campground.findById(req.params.id);
+    const review = new Review(req.body.Review);
+    campground.reviews.push(review);
+    await review.save();
+    await campground.save();
+    res.redirect(`/campgrounds/${campground._id}`);
+}))
+
+
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page not found', 404));
 })
@@ -122,3 +133,4 @@ app.use((err, req, res, next) => {
     }
     res.status(statusCode).render('error', { err });
 })
+
