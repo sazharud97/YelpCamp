@@ -1,8 +1,7 @@
 <% layout('layouts/Boilerplate') %>
-
-    <!-- BOOTSTRAP CARD -->
     <div class="row">
         <div class="col-6 offset-3">
+            <!-- BOOTSTRAP CARD -->
             <div class="card mb-3">
                 <!-- IMAGE -->
                 <img class="card-img-top" src="<%= campground.image %>" alt="Card image cap">
@@ -46,5 +45,17 @@
                     <a href="/campgrounds">All Campgrounds</a>
                 </div>
             </div>
+            <h2>Stayed here? Leave a review!</h2>
+            <form action="" class="mb-4">
+                <div class="mb-3">
+                    <label for="rating" class="form-label">Review Score</label>
+                    <input type="range" class="form-range" min="1" max="5" id="">
+                </div>
+                <div class="mb-3">
+                    <label for="body" class="form-label">Review</label>
+                    <textarea name="review[body]" class="form-control" id="body" cols="30" rows="5"></textarea>
+                </div>
+                <button class="btn btn-success">Submit Review</button>
+            </form>
         </div>
     </div>
