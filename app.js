@@ -90,9 +90,9 @@ app.post('/campgrounds', validateCampground, CatchAsync(async (req, res, next) =
 
 // VIEW SPECIFIC CAMPGROUND DETAILS
 app.get('/campgrounds/:id', CatchAsync(async (req, res) => {
-    const campground = await (Campground.findById(req.params.id));
+    const campground = await Campground.findById(req.params.id).populate('reviews');
     res.render('campgrounds/show', { campground });
-}))
+}));
 
 // EDIT CAMPGROUND DETAILS
 app.get('/campgrounds/:id/edit', CatchAsync(async (req, res) => {
@@ -122,7 +122,7 @@ app.delete('/campgrounds/:id', CatchAsync(async (req, res) => {
 //! ----- REVIEW ROUTING -----
 app.post('/campgrounds/:id/reviews', validateReview, CatchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id);
-    const review = new Review(req.body.Review);
+    const review = new Review(req.body.review);
     campground.reviews.push(review);
     await review.save();
     await campground.save();

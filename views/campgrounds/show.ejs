@@ -45,13 +45,18 @@
                     <a href="/campgrounds">All Campgrounds</a>
                 </div>
             </div>
+
+            <!--? REVIEW SECTION LOGIC -->
             <h2>Stayed here? Leave a review!</h2>
+            <!-- review creation validated form -->
             <form action="/campgrounds/<%= campground._id %>/reviews" method="POST" class="mb-4 validated-form"
                 novalidate>
+                <!-- rating score slider -->
                 <div class="mb-3">
                     <label for="rating" class="form-label">Review Score</label>
-                    <input type="range" class="form-range" min="1" max="5" id="" name="review[rating]" required>
+                    <input type="range" class="form-range" min="1" max="5" id="rating" name="review[rating]" required>
                 </div>
+                <!-- review body textarea -->
                 <div class="mb-3">
                     <label for="body" class="form-label">Review</label>
                     <textarea name="review[body]" class="form-control" id="body" cols="30" rows="5" required></textarea>
@@ -61,5 +66,18 @@
                 </div>
                 <button class="btn btn-success">Submit Review</button>
             </form>
+            <!-- Looping through reviews and generating cards for each -->
+            <% for(let review of campground.reviews) {%>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title"><strong>Rating: <%= review.rating %>/5</strong></h5>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            <%= review.body %>
+                        </p>
+                    </div>
+                </div>
+                <% } %>
         </div>
     </div>
