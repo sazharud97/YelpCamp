@@ -5,7 +5,7 @@ const path = require('path');
 const ejsMate = require('ejs-mate');
 const CatchAsync = require('./utils/CatchAsync');
 const ExpressError = require('./utils/ExpressError');
-const { campgroundSchema, reviewSchema } = require('./schemas.js')
+const { schema, reviewSchema } = require('./schemas.js')
 const methodOverride = require('method-override');
 
 //? MODEL REQS
@@ -41,17 +41,10 @@ app.use(express.urlencoded({ extended: true }))
 // use method override
 app.use(methodOverride('_method'));
 
-const validateCampground = (req, res, next) => {
-    const { error } = campgroundSchema.validate(req.body);
-    if (error) {
-        // map iterates through each item in array and applies condition to them
-        // join separates them by commaw
-        const msg = error.details.map(i => i.message).join(', ')
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
-    }
-}
+app.listen(3000, () => {
+    console.log('LISTENING ON PORT 3000 SAH!!!')
+})
+
 
 const validateReview = (req, res, next) => {
     const { error } = reviewSchema.validate(req.body);
@@ -70,25 +63,25 @@ app.get('/', (req, res) => {
     res.render('home')
 })
 
-
+app.use('/', campgroundRoutes)
 
 //! ----- REVIEW ROUTING -----
-app.post('/campgrounds/:id/reviews', validateReview, CatchAsync(async (req, res) => {
+app.post('/:id/reviews', validateReview, CatchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id);
     const review = new Review(req.body.review);
     campground.reviews.push(review);
     await review.save();
     await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`);
+    res.redirect(`//${campground._id}`);
 }))
 
-app.delete('/campgrounds/:id/reviews/:reviewId', CatchAsync(async (req, res) => {
+app.delete('/:id/reviews/:reviewId', CatchAsync(async (req, res) => {
     // idk how it knows to pull
     const { id, reviewId } = req.params;
     await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
 
-    res.redirect(`/campgrounds/${id}`);
+    res.redirect(`//${id}`);
 }))
 
 

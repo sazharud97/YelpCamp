@@ -1,7 +1,22 @@
 const express = require('express');
 const router = express.Router();
+const CatchAsync = require('../utils/CatchAsync');
+const ExpressError = require('../utils/ExpressError');
+const Campground = require('../models/campground');
 
 //! ----- CAMPGROUND ROUTING -----
+
+const validateCampground = (req, res, next) => {
+    const { error } = chema.validate(req.body);
+    if (error) {
+        // map iterates through each item in array and applies condition to them
+        // join separates them by commaw
+        const msg = error.details.map(i => i.message).join(', ')
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+}
 
 // GET CAMPGROUNDS
 router.get('/campgrounds', CatchAsync(async (req, res) => {
@@ -37,10 +52,6 @@ router.get('/campgrounds/:id/edit', CatchAsync(async (req, res) => {
     const campground = await (Campground.findById(req.params.id));
     res.render('campgrounds/edit', { campground });
 }))
-
-router.listen(3000, () => {
-    console.log('LISTENING ON PORT 3000 SAH!!!')
-})
 
 // EDIT logic, what happens when you press "Update Campground" button
 router.put('/campgrounds/:id', CatchAsync(async (req, res) => {
