@@ -5,15 +5,12 @@ const path = require('path');
 const ejsMate = require('ejs-mate');
 const CatchAsync = require('./utils/CatchAsync');
 const ExpressError = require('./utils/ExpressError');
-const { schema, reviewSchema } = require('./schemas.js')
+const { campgroundSchema, reviewSchema } = require('./schemas.js')
 const methodOverride = require('method-override');
 
-//? MODEL REQS
-const Campground = require('./models/campground');
-const Review = require('./models/review');
-
 //? ROUTER REQS
-const campgroundRoutes = require('./routes/campgrounds.js');
+const campgroundRoutes = require('./routes/campgrounds');
+const reviewRoutes = require('./routes/reviews');
 
 
 // USE 127.0.0.1 INSTEAD OF LOCALHOST
@@ -45,45 +42,13 @@ app.listen(3000, () => {
     console.log('LISTENING ON PORT 3000 SAH!!!')
 })
 
-
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
-    if (error) {
-        // map iterates through each item in array and applies condition to them
-        // join separates them by commaw
-        const msg = error.details.map(i => i.message).join(', ')
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
-    }
-}
+app.use('/campgrounds', campgroundRoutes)
+app.use('/campgrounds/:id/reviews', reviewRoutes);
 
 // HOME PAGE
 app.get('/', (req, res) => {
     res.render('home')
 })
-
-app.use('/', campgroundRoutes)
-
-//! ----- REVIEW ROUTING -----
-app.post('/:id/reviews', validateReview, CatchAsync(async (req, res) => {
-    const campground = await Campground.findById(req.params.id);
-    const review = new Review(req.body.review);
-    campground.reviews.push(review);
-    await review.save();
-    await campground.save();
-    res.redirect(`//${campground._id}`);
-}))
-
-app.delete('/:id/reviews/:reviewId', CatchAsync(async (req, res) => {
-    // idk how it knows to pull
-    const { id, reviewId } = req.params;
-    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-    await Review.findByIdAndDelete(reviewId);
-
-    res.redirect(`//${id}`);
-}))
-
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page not found', 404));
