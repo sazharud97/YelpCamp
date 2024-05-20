@@ -14,7 +14,7 @@ const reviewRoutes = require('./routes/reviews');
 
 
 // USE 127.0.0.1 INSTEAD OF LOCALHOST
-mongoose.connect('mongodb://127.0.0.1:27017/yelpCampDb', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://127.0.0.1:27017/yelpCampDb')
     .then(() => {
         console.log("MONGO CONNECTION OPEN!!!")
     })
@@ -37,7 +37,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }))
 // use method override
 app.use(methodOverride('_method'));
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(3000, () => {
     console.log('LISTENING ON PORT 3000 SAH!!!')
