@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const app = express();
 const path = require('path');
 const ejsMate = require('ejs-mate');
+// session for flashing messages and user auth
+const session = require('express-session');
+const flash = require('connect-flash');
 const CatchAsync = require('./utils/CatchAsync');
 const ExpressError = require('./utils/ExpressError');
 const { campgroundSchema, reviewSchema } = require('./schemas.js')
@@ -11,6 +14,7 @@ const methodOverride = require('method-override');
 //? ROUTER REQS
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
+const { hasUncaughtExceptionCaptureCallback } = require('process');
 
 
 // USE 127.0.0.1 INSTEAD OF LOCALHOST
@@ -39,8 +43,29 @@ app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+const sessionConfig = {
+    secret: 'thisshouldbeasecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 6.048e+8,
+        maxAge: 6.048e+8
+    }
+}
+app.use(session(sessionConfig));
+app.use(flash());
+
 app.listen(3000, () => {
     console.log('LISTENING ON PORT 3000 SAH!!!')
+})
+
+//? flashing middleware
+//? this function flashes any flashes witht he name specified
+app.use(function (req, res, next) {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
 })
 
 app.use('/campgrounds', campgroundRoutes)

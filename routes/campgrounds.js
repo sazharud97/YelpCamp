@@ -38,8 +38,8 @@ router.post('/', validateCampground, CatchAsync(async (req, res, next) => {
     console.log(res);
     const campground = new Campground(req.body.campground);
     await campground.save();
-
-    res.redirect(`/campgrounds/${campground._id}`);
+    req.flash('success', 'Successfully added new campground')
+    res.redirect(`campgrounds/${campground._id}`);
 }))
 
 // VIEW SPECIFIC CAMPGROUND DETAILS
