@@ -10,6 +10,9 @@ const CatchAsync = require('./utils/CatchAsync');
 const ExpressError = require('./utils/ExpressError');
 const { campgroundSchema, reviewSchema } = require('./schemas.js')
 const methodOverride = require('method-override');
+const passport = require('passport');
+const localStrategy = require('passport-local');
+const user = require('./models/user');
 
 //? ROUTER REQS
 const campgroundRoutes = require('./routes/campgrounds');
@@ -55,6 +58,16 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig));
 app.use(flash());
+
+// passport use statements
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(user.authenticate()));
+
+// store user in session
+passport.serializeUser(user.serializeUser())
+// remove user from session
+passport.deserializeUser(user.deserializeUser())
 
 app.listen(3000, () => {
     console.log('LISTENING ON PORT 3000 SAH!!!')
