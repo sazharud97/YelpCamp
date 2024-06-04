@@ -45,6 +45,11 @@ router.post('/', validateCampground, CatchAsync(async (req, res, next) => {
 // VIEW SPECIFIC CAMPGROUND DETAILS
 router.get('/:id', CatchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id).populate('reviews');
+    // redirect to index if campground does not exist
+    if (!campground) {
+        req.flash('error', 'Campground does not exist');
+        res.redirect('/campgrounds');
+    }
     res.render('campgrounds/show', { campground });
 }));
 
@@ -59,6 +64,7 @@ router.put('/:id', CatchAsync(async (req, res) => {
     // destruct request to pull id
     const { id } = req.params;
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
+    req.flash('success', 'Succesfully updated campground')
     res.redirect(`/campgrounds/${campground._id}`)
 }))
 
@@ -66,6 +72,7 @@ router.put('/:id', CatchAsync(async (req, res) => {
 router.delete('/:id', CatchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
+    req.flash('deleted', 'Campground deleted')
     res.redirect('/campgrounds');
 }))
 
