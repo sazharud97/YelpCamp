@@ -12,13 +12,12 @@ const { campgroundSchema, reviewSchema } = require('./schemas.js')
 const methodOverride = require('method-override');
 const passport = require('passport');
 const localStrategy = require('passport-local');
-const user = require('./models/user');
+const User = require('./models/user');
 
-//? ROUTER REQS
+//? ROUTE REQUIREMENTS
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
-const { hasUncaughtExceptionCaptureCallback } = require('process');
-
+const userRoutes = require('./routes/users.js');
 
 // USE 127.0.0.1 INSTEAD OF LOCALHOST
 mongoose.connect('mongodb://127.0.0.1:27017/yelpCampDb')
@@ -62,19 +61,19 @@ app.use(flash());
 // passport use statements
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new localStrategy(user.authenticate()));
+passport.use(new localStrategy(User.authenticate()));
 
 // store user in session
-passport.serializeUser(user.serializeUser())
+passport.serializeUser(User.serializeUser())
 // remove user from session
-passport.deserializeUser(user.deserializeUser())
+passport.deserializeUser(User.deserializeUser())
 
 app.listen(3000, () => {
     console.log('LISTENING ON PORT 3000 SAH!!!')
 })
 
 //? flashing middleware
-//? this function flashes any flashes witht he name specified
+//? this function flashes any flashes with the name specified
 app.use(function (req, res, next) {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
@@ -82,7 +81,15 @@ app.use(function (req, res, next) {
     next();
 })
 
-app.use('/campgrounds', campgroundRoutes)
+app.get('/fakeUser', async (req, res) => {
+    const user = new User({ email: 'saifA.uddin@proton.me', username: 'SexualChocolate' })
+    const newUser = await User.register(user, 'chicken');
+    res.send(newUser);
+})
+
+//? USING ROUTES
+app.use('/', userRoutes);
+app.use('/campgrounds', campgroundRoutes);
 app.use('/campgrounds/:id/reviews', reviewRoutes);
 
 // HOME PAGE
