@@ -3,7 +3,8 @@ const router = express.Router();
 const CatchAsync = require('../utils/CatchAsync');
 const ExpressError = require('../utils/ExpressError');
 const Campground = require('../models/campground');
-const { campgroundSchema } = require('../schemas.js')
+const { campgroundSchema } = require('../schemas.js');
+const { isLoggedIn } = require('../middleware.js');
 
 //! ----- CAMPGROUND ROUTING -----
 
@@ -27,7 +28,7 @@ router.get('/', CatchAsync(async (req, res) => {
 
 // NEW CAMPGROUND PAGE
 // needs to be ABOVE show page else logic will look for campground with ID "new"
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
     res.render('campgrounds/new');
 })
 
