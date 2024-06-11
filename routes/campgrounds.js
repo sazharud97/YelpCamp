@@ -56,13 +56,13 @@ router.get('/:id', CatchAsync(async (req, res) => {
 }));
 
 // EDIT CAMPGROUND DETAILS
-router.get('/:id/edit', CatchAsync(async (req, res) => {
+router.get('/:id/edit', isLoggedIn, CatchAsync(async (req, res) => {
     const campground = await (Campground.findById(req.params.id));
     res.render('campgrounds/edit', { campground });
 }))
 
 // EDIT logic, what happens when you press "Update Campground" button
-router.put('/:id', CatchAsync(async (req, res) => {
+router.put('/:id', isLoggedIn, CatchAsync(async (req, res) => {
     // destruct request to pull id
     const { id } = req.params;
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
@@ -71,7 +71,7 @@ router.put('/:id', CatchAsync(async (req, res) => {
 }))
 
 // DELETE campground
-router.delete('/:id', CatchAsync(async (req, res) => {
+router.delete('/:id', isLoggedIn, CatchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     req.flash('deleted', 'Campground deleted')
