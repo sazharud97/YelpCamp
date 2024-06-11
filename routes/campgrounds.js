@@ -33,7 +33,7 @@ router.get('/new', isLoggedIn, (req, res) => {
 })
 
 // POST for new campground created above
-router.post('/', validateCampground, CatchAsync(async (req, res, next) => {
+router.post('/', isLoggedIn, validateCampground, CatchAsync(async (req, res, next) => {
     // more error handling than just form controls in case form bypassed
     // Joi validating data before we even save or make mongoose calls
     console.log(res);
@@ -46,12 +46,13 @@ router.post('/', validateCampground, CatchAsync(async (req, res, next) => {
 // VIEW SPECIFIC CAMPGROUND DETAILS
 router.get('/:id', CatchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id).populate('reviews');
+    const { username } = req.body;
     // redirect to index if campground does not exist
     if (!campground) {
         req.flash('error', 'Campground does not exist');
         res.redirect('/campgrounds');
     }
-    res.render('campgrounds/show', { campground });
+    res.render('campgrounds/show', { campground, username });
 }));
 
 // EDIT CAMPGROUND DETAILS
