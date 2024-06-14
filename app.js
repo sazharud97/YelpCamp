@@ -72,9 +72,10 @@ app.listen(3000, () => {
     console.log('LISTENING ON PORT 3000 SAH!!!')
 })
 
-//? flashing middleware
-//? this function flashes any flashes with the name specified
+
+// locals, have access to them in every template (e.g navbar)
 app.use(function (req, res, next) {
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     res.locals.deleted = req.flash('deleted');

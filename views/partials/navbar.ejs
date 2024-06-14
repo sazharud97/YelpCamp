@@ -21,12 +21,17 @@
                 </li>
             </ul>
             <hr class="bg-white border-2 border-top" />
+
+            <!-- navbar right login links -->
             <div class="navbar-nav ms-auto">
+                <% if(!currentUser) { %>
                 <a href="/login" class="nav-link">Login</a>
                 <a href="/register" class="nav-link yelpheader">Join YelpCamp!</a>
+                <% } else { %>
                 <form action="/logout">
                     <button class="btn btn-dark">Log Out</button>
                 </form>
+                <% } %>
             </div>
         </div>
     </div>
