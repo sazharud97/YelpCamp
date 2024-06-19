@@ -38,6 +38,7 @@ router.post('/', isLoggedIn, validateCampground, CatchAsync(async (req, res, nex
     // Joi validating data before we even save or make mongoose calls
     console.log(res);
     const campground = new Campground(req.body.campground);
+    campground.author = req.user._id;
     await campground.save();
     req.flash('success', 'Successfully added new campground')
     res.redirect(`campgrounds/${campground._id}`);
@@ -45,14 +46,14 @@ router.post('/', isLoggedIn, validateCampground, CatchAsync(async (req, res, nex
 
 // VIEW SPECIFIC CAMPGROUND DETAILS
 router.get('/:id', CatchAsync(async (req, res) => {
-    const campground = await Campground.findById(req.params.id).populate('reviews');
-    const { username } = req.body;
+    const campground = await Campground.findById(req.params.id).populate('reviews').populate('author');
+    console.log(campground);
     // redirect to index if campground does not exist
     if (!campground) {
         req.flash('error', 'Campground does not exist');
         res.redirect('/campgrounds');
     }
-    res.render('campgrounds/show', { campground, username });
+    res.render('campgrounds/show', { campground });
 }));
 
 // EDIT CAMPGROUND DETAILS

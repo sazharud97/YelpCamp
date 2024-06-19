@@ -40,7 +40,7 @@ router.post('/login',
         const { username } = req.body;
         req.flash('success', `Welcome back, ${username}`);
         const redirectUrl = res.locals.returnTo || '/campgrounds';
-        
+
         delete req.session.returnTo;
         res.redirect(redirectUrl);
     });
