@@ -1,3 +1,8 @@
+const { campgroundSchema } = require('./schemas.js');
+const ExpressError = require('./utils/ExpressError');
+const Campground = require('./models/campground');
+
+// checks to see if user is logged in
 module.exports.isLoggedIn = (req, res, next) => {
     console.log('REQ.USER...', req.user);
     if (!req.isAuthenticated()) {
@@ -19,8 +24,20 @@ module.exports.storeReturnTo = (req, res, next) => {
     next();
 }
 
+module.exports.validateCampground = (req, res, next) => {
+    const { error } = campgroundSchema.validate(req.body);
+    if (error) {
+        // map iterates through each item in array and applies condition to them
+        // join separates them by commaw
+        const msg = error.details.map(i => i.message).join(', ')
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+}
+
 // validating that logged in user is author of campground they're trying to modify
-const isAuthor = async (req, res, next) => {
+module.exports.isAuthor = async (req, res, next) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
     if (!campground.author.equals(req.user._id)) {
