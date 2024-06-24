@@ -2,7 +2,6 @@ const express = require('express');
 // merging paramas from app.js
 const router = express.Router({ mergeParams: true });
 const CatchAsync = require('../utils/CatchAsync');
-const ExpressError = require('../utils/ExpressError');
 
 //? model reqs
 const Campground = require('../models/campground');
