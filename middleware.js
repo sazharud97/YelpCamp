@@ -18,3 +18,14 @@ module.exports.storeReturnTo = (req, res, next) => {
     }
     next();
 }
+
+// validating that logged in user is author of campground they're trying to modify
+const isAuthor = async (req, res, next) => {
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+    if (!campground.author.equals(req.user._id)) {
+        req.flash('error', 'You no permission mista');
+        return res.redirect(`/campgrounds/${id}`);
+    }
+    next();
+}

@@ -4,7 +4,7 @@ const CatchAsync = require('../utils/CatchAsync');
 const ExpressError = require('../utils/ExpressError');
 const Campground = require('../models/campground');
 const { campgroundSchema } = require('../schemas.js');
-const { isLoggedIn } = require('../middleware.js');
+const { isLoggedIn, isAuthor } = require('../middleware.js');
 
 //! ----- CAMPGROUND ROUTING -----
 
@@ -57,8 +57,17 @@ router.get('/:id', CatchAsync(async (req, res) => {
 }));
 
 // EDIT CAMPGROUND DETAILS
-router.get('/:id/edit', isLoggedIn, CatchAsync(async (req, res) => {
-    const campground = await (Campground.findById(req.params.id));
+router.get('/:id/edit', isLoggedIn, isAuthor, CatchAsync(async (req, res) => {
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+    if (!campground) {
+        req.flash('error', 'Requested campground was not found');
+        return res.redirect('/campgrounds');
+    }
+    if (!campground.author.equals(req.user._id)) {
+        req.flash('error', 'You no permission have for this page mista');
+        return res.redirect(`/campgrounds/${id}`);
+    }
     res.render('campgrounds/edit', { campground });
 }))
 
@@ -66,7 +75,12 @@ router.get('/:id/edit', isLoggedIn, CatchAsync(async (req, res) => {
 router.put('/:id', isLoggedIn, CatchAsync(async (req, res) => {
     // destruct request to pull id
     const { id } = req.params;
-    const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
+    const campground = await Campground.findById(id);
+    if (!campground.author.equals(req.user._id)) {
+        req.flash('error', 'You no permission have for this page mista');
+        return res.redirect(`/campgrounds/${id}`);
+    }
+    const camp = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
     req.flash('success', 'Succesfully updated campground')
     res.redirect(`/campgrounds/${campground._id}`)
 }))
