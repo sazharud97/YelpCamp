@@ -9,20 +9,8 @@ const Campground = require('../models/campground');
 const Review = require('../models/review');
 
 //? Schema
-const { reviewSchema } = require('../schemas.js');
-const { isLoggedIn } = require('../middleware.js');
+const { isLoggedIn, validateReview } = require('../middleware.js');
 
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
-    if (error) {
-        // map iterates through each item in array and applies condition to them
-        // join separates them by commaw
-        const msg = error.details.map(i => i.message).join(', ')
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
-    }
-}
 
 //! ----- REVIEW ROUTING -----
 router.post('/', validateReview, isLoggedIn, CatchAsync(async (req, res) => {

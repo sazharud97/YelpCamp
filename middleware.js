@@ -1,4 +1,4 @@
-const { campgroundSchema } = require('./schemas.js');
+const { campgroundSchema, reviewSchema } = require('./schemas.js');
 const ExpressError = require('./utils/ExpressError');
 const Campground = require('./models/campground');
 
@@ -45,4 +45,17 @@ module.exports.isAuthor = async (req, res, next) => {
         return res.redirect(`/campgrounds/${id}`);
     }
     next();
+}
+
+
+module.exports.validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
+    if (error) {
+        // map iterates through each item in array and applies condition to them
+        // join separates them by commaw
+        const msg = error.details.map(i => i.message).join(', ')
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
 }
