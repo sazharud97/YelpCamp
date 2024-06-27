@@ -73,7 +73,8 @@ app.listen(3000, () => {
 })
 
 
-// locals, have access to them in every template (e.g navbar)
+//! locals, but more like globals
+//! have access to them in every template/ejs file (e.g navbar, show)
 app.use(function (req, res, next) {
     console.log(req.session);
     res.locals.currentUser = req.user;

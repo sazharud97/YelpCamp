@@ -8,13 +8,14 @@ const Campground = require('../models/campground');
 const Review = require('../models/review');
 
 //? Schema
-const { isLoggedIn, validateReview } = require('../middleware.js');
+const { isLoggedIn, validateReview, isReviewAuthor } = require('../middleware.js');
 
 
 //! ----- REVIEW ROUTING -----
 router.post('/', validateReview, isLoggedIn, CatchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id);
     const review = new Review(req.body.review);
+    review.author = req.user._id;
     campground.reviews.push(review);
     await review.save();
     await campground.save();
@@ -22,7 +23,7 @@ router.post('/', validateReview, isLoggedIn, CatchAsync(async (req, res) => {
     res.redirect(`/campgrounds/${campground._id}`);
 }))
 
-router.delete('/:reviewId', CatchAsync(async (req, res) => {
+router.delete('/:reviewId', isLoggedIn, isReviewAuthor, CatchAsync(async (req, res) => {
     // idk how it knows to pull
     const { id, reviewId } = req.params;
     await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });

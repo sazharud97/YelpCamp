@@ -1,24 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const CatchAsync = require('../utils/CatchAsync');
-const ExpressError = require('../utils/ExpressError');
 const Campground = require('../models/campground');
-const { campgroundSchema } = require('../schemas.js');
+const campgrounds = require('../controllers/campgrounds.js');
+
 const { isLoggedIn, isAuthor, validateCampground } = require('../middleware.js');
 
 //! ----- CAMPGROUND ROUTING -----
 
 // GET CAMPGROUNDS
-router.get('/', CatchAsync(async (req, res) => {
-    const campgrounds = await (Campground.find({}));
-    res.render('campgrounds/index', { campgrounds })
-}))
+router.get('/', CatchAsync(campgrounds.index));
 
 // NEW CAMPGROUND PAGE
 // needs to be ABOVE show page else logic will look for campground with ID "new"
-router.get('/new', isLoggedIn, (req, res) => {
-    res.render('campgrounds/new');
-})
+router.get('/new', isLoggedIn, campgrounds.renderNewForm)
 
 // POST for new campground created above
 router.post('/', isLoggedIn, validateCampground, CatchAsync(async (req, res, next) => {
@@ -34,7 +29,13 @@ router.post('/', isLoggedIn, validateCampground, CatchAsync(async (req, res, nex
 
 // VIEW SPECIFIC CAMPGROUND DETAILS
 router.get('/:id', CatchAsync(async (req, res) => {
-    const campground = await Campground.findById(req.params.id).populate('reviews').populate('author');
+    const campground = await Campground.findById(req.params.id).populate({
+        // nested populate, reviews and then review authors
+        path: 'reviews',
+        populate: {
+            path: 'author'
+        }
+    }).populate('author');
     console.log(campground);
     // redirect to index if campground does not exist
     if (!campground) {
