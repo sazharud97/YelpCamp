@@ -1,0 +1,55 @@
+<% layout('layouts/Boilerplate') %>
+
+    <div class="row">
+        <h1 class="text-center">New Campground</h1>
+        <div class="col-6 offset-3">
+            <!-- novalidate disables browser default validation tips so we can use our own w/ CSS -->
+            <form action="/campgrounds" method="POST" novalidate class="validated-form">
+                <!-- TITLE -->
+                <div class="mb-3">
+                    <label for="title" class="form-label">Campground Name</label>
+                    <input class="form-control" type="text" id="title" name="campground[title]" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Campground must have a name
+                    </div>
+                </div>
+                <!-- LOCATION -->
+                <div class="mb-3">
+                    <label class="form-label" for="location">Location</label>
+                    <input class="form-control" type="text" id="location" name="campground[location]" required>
+                </div>
+                <!-- IMAGE -->
+                <div class="mb-3">
+                    <label class="form-label" for="image">Image URL</label>
+                    <input class="form-control" type="text" id="image" name="campground[image]" required>
+                </div>
+                <!-- PRICE -->
+                <div class="mb-3">
+                    <label class="form-label" for="price">Price Per Night</label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="price-label">$</span>
+                        <input class="form-control" type="number" inputmode="numeric" id="price" min="0"
+                            name="campground[price]" placeholder="0.00" required>
+                        <div class="valid-feedback">
+                            Wahoo
+                        </div>
+                    </div>
+                </div>
+                <!-- DESCRIPTION -->
+                <div class="mb-3">
+                    <label class="form-label" for="description">Description</label>
+                    <textarea class="form-control" type="text" id="description" name="campground[description]"
+                        required></textarea>
+                </div>
+                <!-- SUBMIT -->
+                <div class="mb-3">
+                    <button class="btn btn-light py-2">Add Campground</button>
+                </div>
+            </form>
+            <a href="/campgrounds"><strong>All Campgrounds</strong></a>
+        </div>
+    </div>
+    

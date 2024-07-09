@@ -1,0 +1,62 @@
+<% layout('layouts/Boilerplate') %>
+
+    <h1>Edit <%= campground.title %>
+    </h1>
+    <!-- calling the PUT request defined in app.js via method override -->
+    <form action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST" novalidate class="validated-form">
+        <!-- TITLE -->
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input class="form-control" type="text" id="title" name="campground[title]" value="<%= campground.title %>"
+                required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+            <div class="invalid-feedback">
+                Campground must have a name
+            </div>
+        </div>
+        <!-- LOCATION -->
+        <div class="mb-3">
+            <label class="form-label" for="location">Location</label>
+            <input class="form-control" type="text" id="location" name="campground[location]"
+                value="<%= campground.location %>" required>
+        </div>
+        <!-- IMAGE -->
+        <div class="mb-3">
+            <label class="form-label" for="image">Image URL</label>
+            <input class="form-control" type="text" id="image" name="campground[image]" value="<%= campground.image %>"
+                required>
+        </div>
+        <!-- PRICE -->
+        <div class="mb-3">
+            <label class="form-label" for="price">Price Per Night</label>
+            <div class="input-group">
+                <span class="input-group-text" id="price-label">$</span>
+                <input class="form-control" type="number" inputmode="numeric" id="price" min="1"
+                    name="campground[price]" value="<%= campground.price %>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Price must be a NUMBER above 1
+                </div>
+            </div>
+        </div>
+        <!-- DESCRIPTION -->
+        <div class="mb-3">
+            <label class="form-label" for="description">Description</label>
+            <textarea class="form-control" type="text" id="description" name="campground[description]"
+                required><%= campground.description %></textarea>
+        </div>
+        <!-- UPDATE -->
+        <button class="btn btn-info">Update Campground</button>
+    </form>
+    <footer class="py-4">
+        <div>
+            <a href="/campgrounds/<%= campground._id %>"><strong>Back to campground</strong></a>
+            <br>
+            <a href="/campgrounds"><strong>All Campgrounds</strong></a>
+        </div>
+    </footer>
+    </body>

@@ -1,0 +1,32 @@
+<% layout('layouts/Boilerplate') %>
+
+    <h1><strong>All Campgrounds</strong></h1>
+    <div>
+        <a href="/campgrounds/new"><strong>Create New Campground</strong></a>
+    </div>
+    <div class="row">
+        <!-- for  loop iterating thru every campground in db -->
+        <!-- 'campgrounds' was passed to file in app.js  -->
+        <% campgrounds.reverse() %>
+            <% for (let campground of campgrounds){ %>
+                <!-- card system to have multiple listings in a row -->
+                <div class="card my-2 mx-1" style="width: 21rem;">
+                    <div class="">
+                        <!-- making img a link to listing -->
+                        <a href="/campgrounds/<%= campground._id %>">
+                            <img class="card-img-top img-fluid" src="<%= campground.image  %>" alt="" width="100%">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <%= campground.title %>
+                            </h5>
+                            <p class="card-text">
+                                <%= campground.description %>
+                            </p>
+                            <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">Book
+                                This!</a>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+    </div>
