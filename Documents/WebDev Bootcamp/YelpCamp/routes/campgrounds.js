@@ -9,26 +9,29 @@ const campground = require('../models/campground');
 
 //! ----- CAMPGROUND ROUTING -----
 
-// GET CAMPGROUNDS
-router.get('/', CatchAsync(campgrounds.index));
+//todo Express way of grouping routes of similar path
+router.route('/')
+    // GET CAMPGROUNDS
+    .get(CatchAsync(campgrounds.index))
+    // POST for new campground created above
+    .post(isLoggedIn, validateCampground, CatchAsync(campgrounds.createCampground))
 
 // NEW CAMPGROUND PAGE
 // needs to be ABOVE show page else logic will look for campground with ID "new"
 router.get('/new', isLoggedIn, campgrounds.renderNewForm)
 
-// POST for new campground created above
-router.post('/', isLoggedIn, validateCampground, CatchAsync(campgrounds.createCampground))
+router.route('/:id')
+    // VIEW SPECIFIC CAMPGROUND DETAILS
+    .get(CatchAsync(campgrounds.showCampground))
+    // EDIT logic, what happens when you press "Update Campground" button
+    .put(isLoggedIn, isAuthor, CatchAsync(campgrounds.updateCampground))
+    // DELETE campground
+    .delete(isLoggedIn, isAuthor, CatchAsync(campgrounds.deleteCampground))
 
-// VIEW SPECIFIC CAMPGROUND DETAILS
-router.get('/:id', CatchAsync(campgrounds.showCampground));
 
 // EDIT CAMPGROUND DETAILS
 router.get('/:id/edit', isLoggedIn, isAuthor, CatchAsync(campgrounds.renderEditForm));
 
-// EDIT logic, what happens when you press "Update Campground" button
-router.put('/:id', isLoggedIn, isAuthor, CatchAsync(campgrounds.updateCampground));
 
-// DELETE campground
-router.delete('/:id', isLoggedIn, isAuthor, CatchAsync(campgrounds.deleteCampground))
 
 module.exports = router;
