@@ -4,7 +4,7 @@
         <h1 class="text-center">New Campground</h1>
         <div class="col-6 offset-3">
             <!-- novalidate disables browser default validation tips so we can use our own w/ CSS -->
-            <form action="/campgrounds" method="POST" novalidate class="validated-form">
+            <form action="/campgrounds" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
                 <!-- TITLE -->
                 <div class="mb-3">
                     <label for="title" class="form-label">Campground Name</label>
@@ -22,10 +22,11 @@
                     <input class="form-control" type="text" id="location" name="campground[location]" required>
                 </div>
                 <!-- IMAGE -->
-                <div class="mb-3">
+                <input type="file" class="btn btn-light py-2" name="image" multiple>
+                <!-- <div class="mb-3">
                     <label class="form-label" for="image">Image URL</label>
                     <input class="form-control" type="text" id="image" name="campground[image]" required>
-                </div>
+                </div> -->
                 <!-- PRICE -->
                 <div class="mb-3">
                     <label class="form-label" for="price">Price Per Night</label>
@@ -52,4 +53,3 @@
             <a href="/campgrounds"><strong>All Campgrounds</strong></a>
         </div>
     </div>
-    

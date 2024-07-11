@@ -5,6 +5,8 @@ const Campground = require('../models/campground');
 const campgrounds = require('../controllers/campgrounds');
 
 const { isLoggedIn, isAuthor, validateCampground } = require('../middleware.js');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 const campground = require('../models/campground');
 
 //! ----- CAMPGROUND ROUTING -----
@@ -14,7 +16,11 @@ router.route('/')
     // GET CAMPGROUNDS
     .get(CatchAsync(campgrounds.index))
     // POST for new campground created above
-    .post(isLoggedIn, validateCampground, CatchAsync(campgrounds.createCampground))
+    // .post(isLoggedIn, validateCampground, CatchAsync(campgrounds.createCampground))
+    // using multer to upload images and store them in upload folder
+    .post(upload.array('image'), (req, res) => {
+        console.log(req.body, req.files);
+    })
 
 // NEW CAMPGROUND PAGE
 // needs to be ABOVE show page else logic will look for campground with ID "new"
