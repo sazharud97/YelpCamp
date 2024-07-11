@@ -7,19 +7,20 @@ const passport = require('passport');
 const { storeReturnTo } = require('../middleware');
 const user = require('../models/user');
 
-router.get('/register', users.renderRegister)
+router.route('/register')
+    .get(users.renderRegister)
+    //! POST ROUTE (submit button)
+    .post(catchAsync(users.register))
 
-//! POST ROUTE (submit button)
-router.post('/register', catchAsync(users.register));
 
-router.get('/login', users.renderLogin)
-
-// passport authenticates using local strategy and implements options specified below
-router.post('/login',
-    // use the storeReturnTo middleware to save the returnTo value from session to res.locals
-    storeReturnTo,
-    passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }),
-    users.login);
+router.route('/login')
+    .get(users.renderLogin)
+    // passport authenticates using local strategy and implements options specified below
+    .post(
+        // use the storeReturnTo middleware to save the returnTo value from session to res.locals
+        storeReturnTo,
+        passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }),
+        users.login);
 
 router.get('/logout', users.logout)
 
