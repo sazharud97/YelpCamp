@@ -1,42 +1,39 @@
 const express = require('express');
 const router = express.Router();
 const CatchAsync = require('../utils/CatchAsync');
-const Campground = require('../models/campground');
-const campgrounds = require('../controllers/campgrounds');
+const Campgrounds = require('../controllers/campgrounds');
 
 const { isLoggedIn, isAuthor, validateCampground } = require('../middleware.js');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
-const campground = require('../models/campground');
+const { storage } = require('../cloudinary')
+const upload = multer({ storage });
+const Campground = require('../models/campground');
 
 //! ----- CAMPGROUND ROUTING -----
 
 //todo Express way of grouping routes of similar path
 router.route('/')
     // GET CAMPGROUNDS
-    .get(CatchAsync(campgrounds.index))
+    .get(CatchAsync(Campgrounds.index))
     // POST for new campground created above
-    // .post(isLoggedIn, validateCampground, CatchAsync(campgrounds.createCampground))
-    // using multer to upload images and store them in upload folder
-    .post(upload.array('image'), (req, res) => {
-        console.log(req.body, req.files);
-    })
+    .post(isLoggedIn, validateCampground, upload.array('image'), CatchAsync(Campgrounds.createCampground))
+
 
 // NEW CAMPGROUND PAGE
 // needs to be ABOVE show page else logic will look for campground with ID "new"
-router.get('/new', isLoggedIn, campgrounds.renderNewForm)
+router.get('/new', isLoggedIn, Campgrounds.renderNewForm)
 
 router.route('/:id')
     // VIEW SPECIFIC CAMPGROUND DETAILS
-    .get(CatchAsync(campgrounds.showCampground))
+    .get(CatchAsync(Campgrounds.showCampground))
     // EDIT logic, what happens when you press "Update Campground" button
-    .put(isLoggedIn, isAuthor, CatchAsync(campgrounds.updateCampground))
+    .put(isLoggedIn, isAuthor, CatchAsync(Campgrounds.updateCampground))
     // DELETE campground
-    .delete(isLoggedIn, isAuthor, CatchAsync(campgrounds.deleteCampground))
+    .delete(isLoggedIn, isAuthor, CatchAsync(Campgrounds.deleteCampground))
 
 
 // EDIT CAMPGROUND DETAILS
-router.get('/:id/edit', isLoggedIn, isAuthor, CatchAsync(campgrounds.renderEditForm));
+router.get('/:id/edit', isLoggedIn, isAuthor, CatchAsync(Campgrounds.renderEditForm));
 
 
 
