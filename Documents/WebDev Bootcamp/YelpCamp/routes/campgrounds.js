@@ -16,7 +16,8 @@ router.route('/')
     // GET CAMPGROUNDS
     .get(CatchAsync(Campgrounds.index))
     // POST for new campground created above
-    .post(isLoggedIn, validateCampground, upload.array('image'), CatchAsync(Campgrounds.createCampground))
+    // have to run multer upload before validateCampground
+    .post(isLoggedIn, upload.array('image'), validateCampground, CatchAsync(Campgrounds.createCampground))
 
 
 // NEW CAMPGROUND PAGE

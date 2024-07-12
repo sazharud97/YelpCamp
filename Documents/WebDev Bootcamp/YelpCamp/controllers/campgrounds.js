@@ -14,8 +14,12 @@ module.exports.createCampground = async (req, res, next) => {
     // Joi validating data before we even save or make mongoose calls
     console.log(res);
     const campground = new Campground(req.body.campground);
+    // mapping every uploaded file into an array of "campground.image"s
+    // pulling image properties from multer request data
+    campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
     campground.author = req.user._id;
     await campground.save();
+    console.log(campground);
     req.flash('success', 'Successfully added new campground')
     res.redirect(`campgrounds/${campground._id}`);
 }
