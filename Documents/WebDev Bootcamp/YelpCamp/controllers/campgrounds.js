@@ -56,6 +56,11 @@ module.exports.updateCampground = async (req, res) => {
     // destruct request to pull id
     const { id } = req.params;
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
+    // mapping every uploaded file into an array of "campground.image"s
+    // pulling image properties from multer request data
+    const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    campground.images.push(...imgs);
+    await campground.save();
     req.flash('success', 'Succesfully updated campground')
     res.redirect(`/campgrounds/${campground._id}`)
 }

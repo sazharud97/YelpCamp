@@ -3,7 +3,8 @@
     <h1>Edit <%= campground.title %>
     </h1>
     <!-- calling the PUT request defined in app.js via method override -->
-    <form action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST" novalidate class="validated-form">
+    <form action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST" novalidate class="validated-form"
+        enctype="multipart/form-data">
         <!-- TITLE -->
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
@@ -24,9 +25,8 @@
         </div>
         <!-- IMAGE -->
         <div class="mb-3">
-            <label class="form-label" for="image">Image URL</label>
-            <input class="form-control" type="text" id="image" name="campground[image]" value="<%= campground.image %>"
-                required>
+            <label class="form-label" for="image">Add Images</label>
+            <input type="file" name="image" id="image" multiple>
         </div>
         <!-- PRICE -->
         <div class="mb-3">

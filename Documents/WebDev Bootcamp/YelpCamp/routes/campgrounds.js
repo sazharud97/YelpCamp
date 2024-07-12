@@ -28,7 +28,7 @@ router.route('/:id')
     // VIEW SPECIFIC CAMPGROUND DETAILS
     .get(CatchAsync(Campgrounds.showCampground))
     // EDIT logic, what happens when you press "Update Campground" button
-    .put(isLoggedIn, isAuthor, CatchAsync(Campgrounds.updateCampground))
+    .put(isLoggedIn, isAuthor, upload.array('image'), validateCampground, CatchAsync(Campgrounds.updateCampground))
     // DELETE campground
     .delete(isLoggedIn, isAuthor, CatchAsync(Campgrounds.deleteCampground))
 
