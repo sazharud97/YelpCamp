@@ -14,7 +14,8 @@
                     <div class="">
                         <!-- making img a link to listing -->
                         <a href="/campgrounds/<%= campground._id %>">
-                            <img class="card-img-top img-fluid" src="<%= campground.image  %>" alt="" width="100%">
+                            <img class="card-img-top img-fluid" src="<%= campground.images[0].url  %>" alt=""
+                                width="100%">
                         </a>
                         <div class="card-body">
                             <h5 class="card-title">
