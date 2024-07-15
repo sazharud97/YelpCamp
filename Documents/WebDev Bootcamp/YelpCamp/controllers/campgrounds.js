@@ -1,5 +1,7 @@
 const Campground = require('../models/campground');
-const { cloudinary } = require("../cloudinary")
+const { cloudinary } = require("../cloudinary");
+const maptilerClient = require("@maptiler/client");
+maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 
 module.exports.index = async (req, res) => {
     const campgrounds = await (Campground.find({}));
@@ -11,12 +13,12 @@ module.exports.renderNewForm = (req, res) => {
 }
 
 module.exports.createCampground = async (req, res, next) => {
-    // more error handling than just form controls in case form bypassed
-    // Joi validating data before we even save or make mongoose calls
-    console.log(res);
+    // storing coordinates of location stored on campground creation
+    const geoData = await maptilerClient.geocoding.forward(req.body.campground.location, { limit: 1 });
     const campground = new Campground(req.body.campground);
-    // mapping every uploaded file into an array of "campground.image"s
-    // pulling image properties from multer request data
+    campground.geometry = geoData.features[0].geometry;
+    //mapping every uploaded file into an array of "campground.image"s
+    //pulling image properties from multer request data
     campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
     campground.author = req.user._id;
     await campground.save();

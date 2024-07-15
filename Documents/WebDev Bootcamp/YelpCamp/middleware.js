@@ -25,6 +25,8 @@ module.exports.storeReturnTo = (req, res, next) => {
     next();
 }
 
+// more error handling than just form controls in case form bypassed
+// Joi validating data before we even save or make mongoose calls
 module.exports.validateCampground = (req, res, next) => {
     const { error } = campgroundSchema.validate(req.body);
     if (error) {
