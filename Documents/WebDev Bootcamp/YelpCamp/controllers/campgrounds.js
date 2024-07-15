@@ -55,12 +55,18 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateCampground = async (req, res) => {
     // destruct request to pull id
     const { id } = req.params;
+    console.log(req.body);
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
     // mapping every uploaded file into an array of "campground.image"s
     // pulling image properties from multer request data
     const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
     campground.images.push(...imgs);
     await campground.save();
+    if (req.body.deleteImages) {
+        // pulls any image that was added to our deleteImages[] array
+        await campground.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
+        console.log(campground);
+    }
     req.flash('success', 'Succesfully updated campground')
     res.redirect(`/campgrounds/${campground._id}`)
 }

@@ -49,8 +49,16 @@
             <textarea class="form-control" type="text" id="description" name="campground[description]"
                 required><%= campground.description %></textarea>
         </div>
-        <!-- UPDATE -->
-        <button class="btn btn-info">Update Campground</button>
+        <% campground.images.forEach(function(img, i){ %>
+            <img src="<%= img.url %>" alt="" width="50%" class="img-thumbnail">
+            <div class="form-check-inline">
+                <input type="checkbox" value="<%= img.filename %>" id="img-<%= i %>" name="deleteImages[]">
+            </div>
+            <label for="img-<%= i %>">Delete?</label>
+            <% }) %>
+                <br>
+                <!-- UPDATE -->
+                <button class=" btn btn-info">Update Campground</button>
     </form>
     <footer class="py-4">
         <div>
