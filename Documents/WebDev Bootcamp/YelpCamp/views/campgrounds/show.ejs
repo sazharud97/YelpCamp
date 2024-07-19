@@ -62,6 +62,9 @@
                     <li class="list-group-item">
                         <strong>$<%= campground.price %></strong>/night
                     </li>
+                    <li class="list-group-item">
+                        <div id="map" style="width: 400px; height: 300px;"></div>
+                    </li>
                 </ul>
                 <!--? checking if campgr author is current user before showing DELETE and EDIT buttons -->
                 <!-- SEPARATE DIV TO HOLD BUTTONS -->
@@ -110,7 +113,7 @@
                         <label for="first-rate3" title="Average">3 stars</label>
                         <input type="radio" id="first-rate4" name="review[rating]" value="4" />
                         <label for="first-rate4" title="Very good">4 stars</label>
-                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" checked="checked" />
                         <label for="first-rate5" title="Amazing">5 stars</label>
                     </fieldset>
                     <!-- review body textarea -->
@@ -159,3 +162,7 @@
                             <% } %>
         </div>
     </div>
+
+    <script>
+
+    </script>
